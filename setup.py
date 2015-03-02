@@ -9,6 +9,7 @@ ext_modules = [
 Extension("gmm", ["gmm.pyx"], libraries=["vl", "m"], include_dirs=[np.get_include()], language='c'),
 Extension("kmeans", ["kmeans.pyx"], libraries=["vl", "m"], include_dirs=[np.get_include()], language='c'),
 Extension("fisher", ["fisher.pyx"], libraries=["vl", "m"], include_dirs=[np.get_include()], language='c'),
+Extension("vlad", ["vlad.pyx"], libraries=["vl", "m"], include_dirs=[np.get_include()], language='c'),
 ]
 
 setup(name = 'vl_wrap', 

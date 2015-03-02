@@ -82,6 +82,21 @@ cdef class KMeans:
     def predict(self, cnp.ndarray[cnp.double_t, ndim=2, mode="c"] data):
         return self.quantize(data)
 
+    def get_means(self):
+        cdef double* means_ptr = <double*>vl_kmeans_get_centers(self.thisptr)
+        cdef unsigned int i
+        cdef cnp.ndarray[cnp.double_t, ndim=1, mode="c"] means = np.zeros(self.n_clusters * self.dimension)
+        for i in range(means.size):
+            means[i] = means_ptr[i]
+        return means.reshape((self.n_clusters, self.dimension))
+
+    def get_n_clusters(self):
+        return self.n_clusters
+
+    def get_dimension(self):
+        return self.dimension
+
+
 # code for constructing numpy array from c pointer
 # method 1:
 #cdef cnp.ndarray[cnp.double_t, ndim=2, mode="c"] centers2 = \
