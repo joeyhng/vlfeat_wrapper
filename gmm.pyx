@@ -19,12 +19,15 @@ cdef extern from "vl/gmm.h":
     void  vl_gmm_set_means (VlGMM *self, void *means)
     void  vl_gmm_set_covariances (VlGMM *self, void *covariances)
     void  vl_gmm_set_priors (VlGMM *self, void *priors)
+    void  vl_gmm_set_initialization (VlGMM *self, VlGMMInitialization init)
+
 
 cdef extern from *:
     cdef struct VlKMeans:
         pass
     cdef enum VlGMMInitialization:
-        pass
+        VlGMMKMeans, VlGMMRand, VlGMMCustom 
+
     int VL_TYPE_DOUBLE
 
 
@@ -33,10 +36,13 @@ cdef class GMM:
     cdef int n_clusters
     cdef VlGMM *thisptr
 
-    def __cinit__(self, dimension, n_clusters):
+    def __cinit__(self, dimension, n_clusters, init='random'):
         self.dimension = dimension
         self.n_clusters = n_clusters
         self.thisptr = vl_gmm_new(VL_TYPE_DOUBLE, dimension, n_clusters)
+        if init == 'kmeans':
+            vl_gmm_set_initialization(self.thisptr, VlGMMKMeans)
+
 
     def __getstate__(self):
         return (self.dimension, self.n_clusters, 
